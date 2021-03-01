@@ -1,0 +1,15 @@
+.total_users {
+  display: flex;
+  font-size: 50px;
+}
+
+.total_users .title {
+  margin-right: 10px;
+}
+
+.data_list {
+  display: flex;
+  width: 100%;
+  max-width: 300px;
+  justify-content: space-between;
+}
