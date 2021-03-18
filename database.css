@@ -13,3 +13,17 @@
   max-width: 300px;
   justify-content: space-between;
 }
+
+.total_data {
+  width: 500px;
+  height: 300px;
+  overflow: scroll;
+}
+
+.total_answer {
+  background-color: rgb(153, 145, 170);
+}
+
+.answer_list {
+  display: flex;
+}
