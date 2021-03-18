@@ -96,13 +96,13 @@ function gatherAnswer() {
   const hornevian_answers = document.querySelectorAll(
     ".hornevian_answers .question_answers"
   );
-  hornevian_answers.forEach((item) => {
+  hornevian_answers.forEach((item, i) => {
     const first_choice = document.createElement("div");
     const second_choice = document.createElement("div");
     const third_choice = document.createElement("div");
-    first_choice.innerHTML = "Assertive : ";
-    second_choice.innerHTML = "Compliant : ";
-    third_choice.innerHTML = "Withdrawn : ";
+    first_choice.innerHTML = "Assertive : " + hornevian_question[i].A;
+    second_choice.innerHTML = "Compliant : " + hornevian_question[i].CPL;
+    third_choice.innerHTML = "Withdrawn : " + hornevian_question[i].W;
     item.appendChild(first_choice);
     item.appendChild(second_choice);
     item.appendChild(third_choice);
@@ -111,27 +111,18 @@ function gatherAnswer() {
   const harmonic_questions = document.querySelectorAll(
     ".harmonic_answers .question_answers"
   );
-  harmonic_questions.forEach((item) => {
+  harmonic_questions.forEach((item, i) => {
     const first_choice = document.createElement("div");
     const second_choice = document.createElement("div");
     const third_choice = document.createElement("div");
-    first_choice.innerHTML = "Positive Outlook : ";
-    second_choice.innerHTML = "Competency : ";
-    third_choice.innerHTML = "Reactive : ";
+    first_choice.innerHTML = "Positive Outlook : " + harmonic_question[i].P;
+    second_choice.innerHTML = "Competency : " + harmonic_question[i].CPT;
+    third_choice.innerHTML = "Reactive : " + harmonic_question[i].R;
     item.appendChild(first_choice);
     item.appendChild(second_choice);
     item.appendChild(third_choice);
   });
-  for (i = 0; i < hornevian_question; i++) {
-    let changing_classname = "question";
-    changing_classname = changing_classname + (i + 1);
-    const first_element = hornevian_question[i].A;
-    const second_element = hornevian_question[i].CPL;
-    const third_element = hornevian_question[i].W;
-    document.querySelector(changing_classname)[0].innerHTML = first_element;
-    document.querySelector(changing_classname)[0].innerHTML = second_element;
-    document.querySelector(changing_classname)[0].innerHTML = third_element;
-  }
+
   console.log(hornevian_question);
   console.log(harmonic_question);
 }
