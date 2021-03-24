@@ -31,6 +31,7 @@ function gatherAnswer() {
   console.log("Gather Answer currently working");
   let hornevian_question = [];
   let harmonic_question = [];
+  let dummies = [];
   for (i = 0; i < user_data.length; i++) {
     //this brings all the user data including name personality and timestamp
 
@@ -39,7 +40,7 @@ function gatherAnswer() {
       //user_data[i].choice[j].length has to do with the number of questions the user solved
       //this number can change inthe future
       //each user_data[i].choice[j] looks like {"key":-5,"choice":"P"}
-      if (user_data[i].choice[j].key > 0) {
+      if (user_data[i].choice[j].key > 0 && user_data[i].choice[j].key < 100) {
         //this is hornevian
         const questionNumber = user_data[i].choice[j].key - 1;
         if (hornevian_question[questionNumber] === undefined) {
@@ -63,8 +64,7 @@ function gatherAnswer() {
         if (user_data[i].choice[j].choice === "W") {
           hornevian_question[questionNumber].W++;
         }
-      }
-      if (user_data[i].choice[j].key < 0) {
+      } else if (user_data[i].choice[j].key < 0) {
         //this is harmonic
         const questionNumber = Math.abs(user_data[i].choice[j].key) - 1;
         //Math.abs function was used since harmonic questions' keys are negative
@@ -88,6 +88,21 @@ function gatherAnswer() {
         }
         if (user_data[i].choice[j].choice === "R") {
           harmonic_question[questionNumber].R++;
+        }
+      } else if (user_data[i].choice[j].key >= 100) {
+        const questionNumber = user_data[i].choice[j].key - 100;
+        if (dummies[questionNumber] === undefined) {
+          temporary_object = { A: 0, B: 0, C: 0 };
+          dummies[questionNumber] = temporary_object;
+        }
+        if (user_data[i].choice[j].choice === 1) {
+          dummies[questionNumber].A++;
+        }
+        if (user_data[i].choice[j].choice === 2) {
+          dummies[questionNumber].B++;
+        }
+        if (user_data[i].choice[j].choice === 3) {
+          dummies[questionNumber].C++;
         }
       }
     }
@@ -122,7 +137,23 @@ function gatherAnswer() {
     item.appendChild(second_choice);
     item.appendChild(third_choice);
   });
+  //dummies
+  const dummies_answers = document.querySelectorAll(
+    ".dummies_answers .question_answers"
+  );
+  dummies_answers.forEach((item, i) => {
+    const first_choice = document.createElement("div");
+    const second_choice = document.createElement("div");
+    const third_choice = document.createElement("div");
+    first_choice.innerHTML = "Choice1 : " + dummies[i].A;
+    second_choice.innerHTML = "Choice2 : " + dummies[i].B;
+    third_choice.innerHTML = "Choice3 : " + dummies[i].C;
+    item.appendChild(first_choice);
+    item.appendChild(second_choice);
+    item.appendChild(third_choice);
+  });
 
   console.log(hornevian_question);
   console.log(harmonic_question);
+  console.log(dummies);
 }

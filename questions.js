@@ -1,5 +1,25 @@
 const name = "아무개";
 
+const dummies = [
+  //this is for questions that I would like to know
+  {
+    question:
+      name +
+      "님에게 선물하면 가장 좋을 것 같은 술은? (" +
+      name +
+      "님이 술을 못 마시더라도 일단 여기서는 술을 '잘' 마신다고 가정하기)",
+    options: [
+      {
+        selection: "스트레스를 삼켜버리는 시원한 맛의 술",
+        id: 1,
+      },
+      { selection: "은은한 향을 머금고 있는 달콤한 술", id: 2 },
+      { selection: "깊이가 느껴지는 중후한 맛의 술", id: 3 },
+    ],
+    key: 100,
+  },
+];
+
 const hornevian = [
   {
     question:
@@ -319,4 +339,19 @@ for (i = 0; i < harmonic.length; i++) {
   question_container.appendChild(question);
   question_container.appendChild(answers);
   document.querySelector(".harmonic_answers").appendChild(question_container);
+}
+
+for (i = 0; i < dummies.length; i++) {
+  const question_container = document.createElement("div");
+  question_container.className = "question_container";
+  let changing_classname = "question";
+  changing_classname = changing_classname + (i + 1);
+  const question = document.createElement("div");
+  question.className = changing_classname;
+  question.innerHTML = dummies[i].question;
+  const answers = document.createElement("div");
+  answers.className = "question_answers";
+  question_container.appendChild(question);
+  question_container.appendChild(answers);
+  document.querySelector(".dummies_answers").appendChild(question_container);
 }

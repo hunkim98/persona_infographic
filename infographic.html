@@ -12,22 +12,21 @@
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="./database.css">
-
+    <script src="https://d3js.org/d3.v4.js"></script>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;700;900&display=swap"
+        rel="stylesheet">
+    <link href='//spoqa.github.io/spoqa-han-sans/css/SpoqaHanSansNeo.css' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="./infographic.css">
 </head>
 
 <body>
-
-    <div class="total_users">
-        <div class="title">Total Users:</div>
-        <div class="amount"></div>
+    <div class="title_container">
+        <div class="title">페르소나 분포도</div>(
+        <div class="number"></div>)
     </div>
-    <div class="total_data"></div>
-    <div class="total_answer"></div>
-    <div class="hornevian_answers"></div>
-    <div class="harmonic_answers"></div>
-    <div class="dummies_answers"></div>
-    <script src="./questions.js"></script>
-    <script src="./database.js"></script>
+    <div id="my_dataviz"></div>
+    <script src="infographic.js"></script>
 </body>
 
 </html>
