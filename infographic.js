@@ -4,6 +4,9 @@ let json_data;
 let user_data;
 let personality_array = [0, 0, 0, 0, 0, 0, 0, 0, 0];
 let sum_of_personality = 0;
+let chosen_user;
+let chosen_data = 10;
+let chosen_data_analysis = { A: 0, CPL: 0, W: 0, P: 0, CPT: 0, R: 0 };
 
 const mask_names = [
   "삐꺽거리는 로봇",
@@ -27,7 +30,108 @@ fetch(database)
     for (i = 0; i < user_data.length; i++) {
       personality_array[user_data[i].personality - 1]++;
     }
-    console.log(personality_array);
+    console.log(user_data[chosen_data].personality);
+    chosen_user = user_data[chosen_data]; //instantiate chosen_user
+    for (let key in chosen_data_analysis) {
+      //we use for.. in.. to loop json object
+      for (i = 0; i < user_data[chosen_data].choice.length; i++) {
+        if (key === user_data[chosen_data].choice[i].choice) {
+          chosen_data_analysis[key]++;
+        }
+      }
+      console.log(key + chosen_data_analysis[key]);
+    }
+    //from this, this is for d3
+    let min_hornevian = 9; //total of 9 hornevian questions
+    let min_harmonic = 5; //total of 5 harmonic questions
+    for (let key in chosen_data_analysis) {
+      if (key === "A" || key === "CPL" || key === "W") {
+        if (chosen_data_analysis[key] < min_hornevian) {
+          min_hornevian = chosen_data_analysis[key];
+        }
+      } else if (key === "P" || key === "CPT" || key === "R") {
+        if (chosen_data_analysis[key] < min_harmonic) {
+          min_harmonic = chosen_data_analysis[key];
+        }
+      }
+    }
+    for (let key in chosen_data_analysis) {
+      if (key === "A" || key === "CPL" || key === "W") {
+        if (chosen_data_analysis[key] === min_hornevian) {
+          delete chosen_data_analysis[key]; // this deletes the element
+        }
+      } else if (key === "P" || key === "CPT" || key === "R") {
+        if (chosen_data_analysis[key] === min_harmonic) {
+          delete chosen_data_analysis[key];
+        }
+      }
+    }
+    console.log(chosen_data_analysis);
+    let hornevian_length = 9; //total of 9 hornevian questions
+    let harmonic_length = 5;
+    let complete_analysis = {};
+    for (let key in chosen_data_analysis) {
+      if (key === "A" || key === "CPL" || key === "W") {
+        for (let nested_key in chosen_data_analysis) {
+          //nested loop
+          if (key === "A") {
+            if (nested_key === "P") {
+              complete_analysis["E7"] =
+                (chosen_data_analysis[key] / hornevian_length +
+                  chosen_data_analysis[nested_key] / harmonic_length) *
+                50;
+            } else if (nested_key === "CPT") {
+              complete_analysis["E3"] =
+                (chosen_data_analysis[key] / hornevian_length +
+                  chosen_data_analysis[nested_key] / harmonic_length) *
+                50;
+            } else if (nested_key === "R") {
+              complete_analysis["E8"] =
+                (chosen_data_analysis[key] / hornevian_length +
+                  chosen_data_analysis[nested_key] / harmonic_length) *
+                50;
+            }
+          } else if (key === "CPL") {
+            if (nested_key === "P") {
+              complete_analysis["E9"] =
+                (chosen_data_analysis[key] / hornevian_length +
+                  chosen_data_analysis[nested_key] / harmonic_length) *
+                50;
+            } else if (nested_key === "CPT") {
+              complete_analysis["E5"] =
+                (chosen_data_analysis[key] / hornevian_length +
+                  chosen_data_analysis[nested_key] / harmonic_length) *
+                50;
+            } else if (nested_key === "R") {
+              complete_analysis["E4"] =
+                (chosen_data_analysis[key] / hornevian_length +
+                  chosen_data_analysis[nested_key] / harmonic_length) *
+                50;
+            }
+          } else if (key === "W") {
+            if (nested_key === "P") {
+              complete_analysis["E2"] =
+                (chosen_data_analysis[key] / hornevian_length +
+                  chosen_data_analysis[nested_key] / harmonic_length) *
+                50;
+            } else if (nested_key === "CPT") {
+              complete_analysis["E6"] =
+                (chosen_data_analysis[key] / hornevian_length +
+                  chosen_data_analysis[nested_key] / harmonic_length) *
+                50;
+            } else if (nested_key === "R") {
+              complete_analysis["E1"] =
+                (chosen_data_analysis[key] / hornevian_length +
+                  chosen_data_analysis[nested_key] / harmonic_length) *
+                50;
+            }
+          }
+          console.log(chosen_data_analysis[key] / hornevian_length);
+        }
+      }
+    }
+    console.log(complete_analysis);
+    //this is for d3
     json_data = { children: [] };
     for (j = 0; j < 9; j++) {
       json_data.children[j] = {
@@ -130,25 +234,29 @@ const d3_object = function (json_object, maximum, minimum) {
     })
     .style("stroke", "black")
     .style("fill", function (d) {
-      switch (d.data.id) {
-        case 1:
-          return "#FFC312";
-        case 2:
-          return "#FDA7DF";
-        case 3:
-          return "#12CBC4";
-        case 4:
-          return "#9980FA";
-        case 5:
-          return "#12CBC4";
-        case 6:
-          return "#FDA7DF";
-        case 7:
-          return "#C4E538";
-        case 8:
-          return "#EA2027";
-        case 9:
-          return "#FDA7DF";
+      if (chosen_user.personality === d.data.id) {
+        switch (chosen_user.personality) {
+          case 1:
+            return "#FFC312";
+          case 2:
+            return "#FDA7DF";
+          case 3:
+            return "#12CBC4";
+          case 4:
+            return "#9980FA";
+          case 5:
+            return "#12CBC4";
+          case 6:
+            return "#FDA7DF";
+          case 7:
+            return "#C4E538";
+          case 8:
+            return "#EA2027";
+          case 9:
+            return "#FDA7DF";
+        }
+      } else {
+        return "#656565";
       }
     });
 
@@ -218,7 +326,11 @@ const d3_object = function (json_object, maximum, minimum) {
     .enter()
     .append("text")
     .attr("class", function (d) {
-      return "value " + "type" + d.data.id; //added class for each
+      if (chosen_user.personality === d.data.id) {
+        return null;
+      } else {
+        return "value " + "type" + d.data.id; //added class for each
+      }
     })
     .attr("x", function (d) {
       return d.x1 - 10;
@@ -241,7 +353,11 @@ const d3_object = function (json_object, maximum, minimum) {
     .enter()
     .append("text")
     .attr("class", function (d) {
-      return "value " + "type" + d.data.id; //added class for each
+      if (chosen_user.personality === d.data.id) {
+        return null;
+      } else {
+        return "value " + "type" + d.data.id; //added class for each
+      }
     })
     .attr("x", function (d) {
       return d.x0 + 10;
