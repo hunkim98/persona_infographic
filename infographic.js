@@ -5,7 +5,7 @@ let user_data;
 let personality_array = [0, 0, 0, 0, 0, 0, 0, 0, 0];
 let sum_of_personality = 0;
 let chosen_user;
-let chosen_data = 10;
+let chosen_data = 26590;
 let chosen_data_analysis = { A: 0, CPL: 0, W: 0, P: 0, CPT: 0, R: 0 };
 
 const mask_names = [
@@ -25,6 +25,7 @@ fetch(database)
     user_data = data;
     document.querySelector(".title_container .number").innerHTML =
       user_data.length;
+    console.log(user_data[chosen_data]);
   })
   .then(() => {
     for (i = 0; i < user_data.length; i++) {
@@ -57,7 +58,10 @@ fetch(database)
     }
     for (let key in chosen_data_analysis) {
       if (key === "A" || key === "CPL" || key === "W") {
-        if (chosen_data_analysis[key] === min_hornevian) {
+        if (
+          chosen_data_analysis[key] === min_hornevian &&
+          chosen_data_analysis[key] != 3
+        ) {
           delete chosen_data_analysis[key]; // this deletes the element
         }
       } else if (key === "P" || key === "CPT" || key === "R") {
@@ -93,6 +97,23 @@ fetch(database)
             }
           } else if (key === "CPL") {
             if (nested_key === "P") {
+              complete_analysis["E2"] =
+                (chosen_data_analysis[key] / hornevian_length +
+                  chosen_data_analysis[nested_key] / harmonic_length) *
+                50;
+            } else if (nested_key === "CPT") {
+              complete_analysis["E1"] =
+                (chosen_data_analysis[key] / hornevian_length +
+                  chosen_data_analysis[nested_key] / harmonic_length) *
+                50;
+            } else if (nested_key === "R") {
+              complete_analysis["E6"] =
+                (chosen_data_analysis[key] / hornevian_length +
+                  chosen_data_analysis[nested_key] / harmonic_length) *
+                50;
+            }
+          } else if (key === "W") {
+            if (nested_key === "P") {
               complete_analysis["E9"] =
                 (chosen_data_analysis[key] / hornevian_length +
                   chosen_data_analysis[nested_key] / harmonic_length) *
@@ -108,29 +129,63 @@ fetch(database)
                   chosen_data_analysis[nested_key] / harmonic_length) *
                 50;
             }
-          } else if (key === "W") {
-            if (nested_key === "P") {
-              complete_analysis["E2"] =
-                (chosen_data_analysis[key] / hornevian_length +
-                  chosen_data_analysis[nested_key] / harmonic_length) *
-                50;
-            } else if (nested_key === "CPT") {
-              complete_analysis["E6"] =
-                (chosen_data_analysis[key] / hornevian_length +
-                  chosen_data_analysis[nested_key] / harmonic_length) *
-                50;
-            } else if (nested_key === "R") {
-              complete_analysis["E1"] =
-                (chosen_data_analysis[key] / hornevian_length +
-                  chosen_data_analysis[nested_key] / harmonic_length) *
-                50;
-            }
           }
-          console.log(chosen_data_analysis[key] / hornevian_length);
         }
       }
     }
     console.log(complete_analysis);
+    //add mask to it
+    const mask_option = document.createElement("div");
+    mask_option.className = "mask_option";
+    const mask_option_img = document.createElement("img");
+    const mask_percentage = document.createElement("div");
+    let maximum_option = 0;
+    const filepath = "./mask_raw/";
+    for (i = 1; i < 10; i++) {
+      if (chosen_user.personality === i) {
+        let finalpath = filepath + i + ".svg";
+        mask_option_img.src = finalpath;
+        mask_option.appendChild(mask_option_img);
+        for (let key in complete_analysis) {
+          if (key.slice(1, 3) != chosen_user.personality) {
+            if (complete_analysis[key] > maximum_option) {
+              maximum_option = complete_analysis[key];
+              console.log(maximum_option);
+            }
+          } else {
+            mask_percentage.innerHTML = complete_analysis[key].toFixed(1) + "%";
+            console.log(mask_percentage);
+            mask_option.appendChild(mask_percentage);
+          }
+        }
+        document
+          .querySelector(".mask_option_container")
+          .appendChild(mask_option);
+      }
+    }
+    const mask_second_option = document.createElement("div");
+    const mask_second_option_img = document.createElement("img");
+    mask_second_option.className = "mask_option";
+    const mask_second_percentage = document.createElement("div");
+    for (let key in complete_analysis) {
+      if (
+        complete_analysis[key] == maximum_option &&
+        key.slice(1, 3) != chosen_user.personality
+      ) {
+        let finalpath = filepath + key.slice(1, 3) + ".svg";
+        mask_second_option_img.src = finalpath;
+        mask_second_option.appendChild(mask_second_option_img);
+        mask_second_percentage.innerHTML =
+          complete_analysis[key].toFixed(1) + "%";
+        mask_second_option.appendChild(mask_second_percentage);
+        document
+          .querySelector(".mask_option_container")
+          .appendChild(mask_second_option);
+
+        break;
+      }
+    }
+
     //this is for d3
     json_data = { children: [] };
     for (j = 0; j < 9; j++) {
@@ -179,8 +234,9 @@ var margin = { top: 10, right: 10, bottom: 10, left: 10 },
 var svg = d3
   .select("#my_dataviz")
   .append("svg")
-  .attr("width", width + margin.left + margin.right)
-  .attr("height", height + margin.top + margin.bottom)
+  .attr("preserveAspectRatio", "xMinYMin meet")
+  .attr("viewBox", "0 0 700 700")
+  .classed("svg-content", true)
   .append("g")
   .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
