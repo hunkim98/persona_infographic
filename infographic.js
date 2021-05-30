@@ -19,7 +19,7 @@ const mask_names = [
   "불 같은 악마",
   "평화로운 자연인",
 ];
-fetch(database)
+fetch(database, { method: "POST" })
   .then((response) => response.json())
   .then((data) => {
     user_data = data;

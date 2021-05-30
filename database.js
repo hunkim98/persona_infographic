@@ -3,7 +3,7 @@ const database = new Request("https://personapersonality.com/gatherData");
 let user_data;
 let user_choice;
 
-fetch(database)
+fetch(database, { method: "POST" })
   .then((response) => response.json())
   .then((data) => {
     user_data = data;
